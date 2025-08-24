@@ -1,25 +1,15 @@
-const projects = [
-  {
-    title: "Tata Power GIS Automation",
-    description: "Developed automation scripts using Python, GIS, and Magik for power grid management.",
-    tech: ["Python", "GIS", "Magik", "ArcGIS"],
-    link: "https://github.com/your-repo",
-  },
-  {
-    title: "OpsVision Platform",
-    description: "Built monitoring dashboards with Node.js, React.js, ADX queries, and Jest testing.",
-    tech: ["Node.js", "React.js", "ADX", "Jest"],
-    link: "https://github.com/your-repo",
-  },
-  {
-    title: "Service Experience Portal",
-    description: "Worked on Angular + Spring Boot app, integrated Jenkins CI/CD pipelines.",
-    tech: ["Angular", "Spring Boot", "Jenkins"],
-    link: "https://github.com/your-repo",
-  },
-];
+import React, { useEffect, useState} from 'react';
 
 const Projects = () => {
+  const [projects , setProjects] = useState([]);
+
+
+useEffect(()=>{
+  fetch(`${process.env.REACT_APP_API_URL}/api/projects`)
+  .then((res) => res.json())
+  .then((data) => setProjects(data));
+}, []);
+
     return(
         <div className="min-h-screen bg-gray-950 text-white px-6 py-12">
             <h2 className="text-3xl font-bold text-center mb-8">My Projects</h2>

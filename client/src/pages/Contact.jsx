@@ -2,21 +2,35 @@ import { useState } from "react";
 
 const  Contact = () => {
     const[formData, setFormData] = useState({name: "", email: "", message: ""});
+    const [status, setStatus] = useState("");
 
     const handleChange = (e) =>{
         setFormData({ ...formData, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert(`Message Sent!\nName: ${formData.name}\nEmail: ${formData.email}\nMessage: ${formData.message}`);
-        setFormData({name: "", email: "", message: ""});
+        setStatus("Sending...");
+
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/contact`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json"},
+            body: JSON.stringify(formData),
+        });
+
+        const data = await res.json();
+        if(data.success) {
+            setStatus("Message Sent");
+            setFormData({ name: "", email: "", message: ""});
+        }else{
+            setStatus("Failed to send message");
+        }
     };
 
     return(
         <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center px-6 py-12">
-            <h2 className="text-3xl font-bold mb-6">Contact Me</h2>
             <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-xl shadow-lg w-full max-w-lg">
+            <h2 className="text-3xl font-bold mb-6">Contact Me</h2>
                 <div className="mb-4">
                     <label className="block text-gray-300 mb-2">Name</label>
                     <input
@@ -50,7 +64,7 @@ const  Contact = () => {
                 <button
                 type="submit"
                 className="w-full bg-teal-500 text-black font-semibold px-4 py-2 rounded hover:bg-teal-400 transition">Send Message</button>
-
+                <p className="mt-3 text-center">{status}</p>
             </form>
 
         </div>
